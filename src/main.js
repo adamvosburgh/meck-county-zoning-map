@@ -23,7 +23,64 @@ async function init() {
   // Setup search functionality
   setupSearch(map, searchInput, searchBtn);
 
+  // Setup layer toggles for debugging
+  setupLayerToggles(map);
+
   console.log('Mecklenburg County Zoning Map initialized');
+}
+
+/**
+ * Setup layer toggle controls
+ * @param {Object} map - Map instance
+ */
+function setupLayerToggles(map) {
+  const toggleBasemap = document.getElementById('toggle-basemap');
+  const toggleParcels = document.getElementById('toggle-parcels');
+  const toggleStreets = document.getElementById('toggle-streets');
+  const toggleBuildings = document.getElementById('toggle-buildings');
+
+  // Wait for map to be ready before setting up toggles
+  const setupToggles = () => {
+    toggleBasemap.addEventListener('change', (e) => {
+      const visibility = e.target.checked ? 'visible' : 'none';
+      if (map.getLayer('osm-tiles')) {
+        map.setLayoutProperty('osm-tiles', 'visibility', visibility);
+      }
+    });
+
+    toggleParcels.addEventListener('change', (e) => {
+      const visibility = e.target.checked ? 'visible' : 'none';
+      if (map.getLayer('parcels')) {
+        map.setLayoutProperty('parcels', 'visibility', visibility);
+      }
+      if (map.getLayer('parcels-fill')) {
+        map.setLayoutProperty('parcels-fill', 'visibility', visibility);
+      }
+    });
+
+    toggleStreets.addEventListener('change', (e) => {
+      const visibility = e.target.checked ? 'visible' : 'none';
+      if (map.getLayer('streets')) {
+        map.setLayoutProperty('streets', 'visibility', visibility);
+      }
+    });
+
+    toggleBuildings.addEventListener('change', (e) => {
+      const visibility = e.target.checked ? 'visible' : 'none';
+      if (map.getLayer('buildings')) {
+        map.setLayoutProperty('buildings', 'visibility', visibility);
+      }
+      if (map.getLayer('buildings-outline')) {
+        map.setLayoutProperty('buildings-outline', 'visibility', visibility);
+      }
+    });
+  };
+
+  if (map.isStyleLoaded()) {
+    setupToggles();
+  } else {
+    map.once('style.load', setupToggles);
+  }
 }
 
 /**

@@ -72,13 +72,25 @@ function osmToGeoJSON(osmData) {
           .filter(coord => coord !== null);
 
         if (coordinates.length > 1) {
+          const tags = elem.tags || {};
+
+          // Determine geometry type - if it's a closed way (building, etc), use Polygon
+          const isClosedWay = coordinates.length > 2 &&
+            coordinates[0][0] === coordinates[coordinates.length - 1][0] &&
+            coordinates[0][1] === coordinates[coordinates.length - 1][1];
+
+          const isBuildingOrArea = tags.building || tags.area === 'yes' || tags.amenity;
+
+          const geometryType = (isClosedWay && isBuildingOrArea) ? 'Polygon' : 'LineString';
+          const geomCoordinates = geometryType === 'Polygon' ? [coordinates] : coordinates;
+
           features.push({
             type: 'Feature',
             geometry: {
-              type: 'LineString',
-              coordinates
+              type: geometryType,
+              coordinates: geomCoordinates
             },
-            properties: elem.tags || {}
+            properties: tags
           });
         }
       }

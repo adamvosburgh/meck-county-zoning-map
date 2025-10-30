@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mecklenburg County Zoning Map</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/style.css">
   <link href="https://cdn.jsdelivr.net/npm/maplibre-gl@latest/dist/maplibre-gl.css" rel="stylesheet" />
 </head>
 <body>
@@ -21,6 +21,26 @@
     <button id="search-btn" class="search-btn">Search</button>
   </div>
 
+  <!-- Layer Toggle Container -->
+  <div class="layer-toggle-container">
+    <label class="toggle-item">
+      <input type="checkbox" id="toggle-basemap" checked>
+      <span>OSM Tiles</span>
+    </label>
+    <label class="toggle-item">
+      <input type="checkbox" id="toggle-parcels" checked>
+      <span>Parcels</span>
+    </label>
+    <label class="toggle-item">
+      <input type="checkbox" id="toggle-streets" checked>
+      <span>Streets</span>
+    </label>
+    <label class="toggle-item">
+      <input type="checkbox" id="toggle-buildings" checked>
+      <span>Buildings</span>
+    </label>
+  </div>
+
   <!-- Tooltip/Popup -->
   <div id="tooltip" class="tooltip" style="display: none;">
     <div id="tooltip-content"></div>
@@ -35,6 +55,6 @@
     </p>
   </footer>
 
-  <script type="module" src="../src/main.js"></script>
+  <script type="module" src="/src/main.js"></script>
 </body>
 </html>

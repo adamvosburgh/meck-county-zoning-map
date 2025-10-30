@@ -2,16 +2,6 @@
 
 An interactive MapLibre GL JS web application visualizing Mecklenburg County parcels, zoning information, buildings, and streets using live data from open APIs.
 
-## Features
-
-- **Parcel Visualization**: Display Mecklenburg County parcel boundaries fetched from the County's ArcGIS API (zoom ≥ 14)
-- **Zoning Information**: Hover over parcels to view zoning codes and descriptions via the City of Charlotte's Parcel Zoning Lookup API
-- **Building Footprints**: OSM building data via Overpass API (zoom ≥ 15)
-- **Street Centerlines**: OSM street data via Overpass API (zoom ≥ 12)
-- **Address Search**: Geocode addresses using Charlotte's MasterAddress GeocodeServer with Nominatim fallback
-- **Responsive Design**: Works on desktop and mobile devices
-- **Static Deployment**: Deploy via GitHub Pages with optional serverless proxy layer
-
 ## Data Sources
 
 | Data | Source | URL |
@@ -143,13 +133,6 @@ All APIs are public and require no authentication. Rate limits:
 - Overpass queries are optimized with bounding boxes
 - Zoom-based layer loading prevents large data transfers at overview zoom levels
 
-## Browser Support
-
-- Chrome/Edge 90+
-- Firefox 88+
-- Safari 14+
-- Mobile browsers (iOS Safari, Chrome Mobile)
-
 ## Future Enhancements
 
 - [ ] Zoning color symbology and legend
@@ -170,11 +153,3 @@ All APIs are public and require no authentication. Rate limits:
 ## License
 
 MIT
-
-## Contributing
-
-Contributions welcome! Please submit issues and pull requests.
-
-## Contact
-
-For questions or issues, open a GitHub issue in this repository.
