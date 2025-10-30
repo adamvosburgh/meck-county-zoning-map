@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mecklenburg County Zoning Map</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdn.jsdelivr.net/npm/maplibre-gl@latest/dist/maplibre-gl.css" rel="stylesheet" />
+</head>
+<body>
+  <div id="map"></div>
+
+  <!-- Search Container -->
+  <div class="search-container">
+    <input
+      type="text"
+      id="search-input"
+      placeholder="Search address (e.g., '123 Main St, Charlotte')"
+      class="search-input"
+    >
+    <button id="search-btn" class="search-btn">Search</button>
+  </div>
+
+  <!-- Tooltip/Popup -->
+  <div id="tooltip" class="tooltip" style="display: none;">
+    <div id="tooltip-content"></div>
+  </div>
+
+  <!-- Attribution Footer -->
+  <footer class="attribution">
+    <p>
+      Data © 2025 City of Charlotte & Mecklenburg County GIS.
+      Basemap © OpenStreetMap contributors.
+      Building footprints & streets via Overpass API.
+    </p>
+  </footer>
+
+  <script type="module" src="../src/main.js"></script>
+</body>
+</html>

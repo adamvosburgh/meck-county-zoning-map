@@ -1,0 +1,35 @@
+{
+  "name": "meck-county-zoning-map",
+  "version": "1.0.0",
+  "description": "Interactive MapLibre GL JS webmap visualizing Mecklenburg County parcels, zoning, buildings, and streets",
+  "type": "module",
+  "main": "src/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "proxy:dev": "wrangler pages dev -- npm run dev"
+  },
+  "dependencies": {
+    "maplibre-gl": "^4.0.0",
+    "@turf/turf": "^6.5.0",
+    "lodash-es": "^4.17.21"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "wrangler": "^3.0.0"
+  },
+  "keywords": [
+    "maplibre",
+    "zoning",
+    "mecklenburg",
+    "gis",
+    "webmap"
+  ],
+  "author": "Adam Vosburgh",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adamvosburgh/meck-county-zoning-map.git"
+  }
+}
