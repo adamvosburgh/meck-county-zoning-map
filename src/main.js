@@ -9,24 +9,18 @@ import { geocodeAddress } from './utils/geocode.js';
  * Initialize the application
  */
 async function init() {
-  // Initialize map
   const map = initializeMap();
 
-  // Get DOM elements
-  const tooltipEl = document.getElementById('tooltip');
   const searchInput = document.getElementById('search-input');
   const searchBtn = document.getElementById('search-btn');
 
-  // Setup layers
-  setupLayers(map, tooltipEl);
+  // Setup parcel details panel FIRST so handler is available
+  await setupParcelDetailsPanel();
 
-  // Setup search functionality
+  // Then setup layers which will use the handler
+  setupLayers(map);
   setupSearch(map, searchInput, searchBtn);
-
-  // Setup layer toggles for debugging
   setupLayerToggles(map);
-
-  console.log('Mecklenburg County Zoning Map initialized');
 }
 
 /**
@@ -123,6 +117,57 @@ function setupSearch(map, searchInput, searchBtn) {
   searchInput.addEventListener('focus', () => {
     searchInput.value = '';
   });
+}
+
+/**
+ * Setup parcel details panel
+ */
+async function setupParcelDetailsPanel() {
+  const { fetchParcelDetails } = await import('./layers/parcels.js');
+
+  // Create panel element
+  const panel = document.createElement('div');
+  panel.id = 'parcel-details-panel';
+  panel.className = 'parcel-details-panel hidden';
+  panel.innerHTML = `
+    <div class="panel-header">
+      <h3>Parcel Details</h3>
+      <button class="close-btn">&times;</button>
+    </div>
+    <div class="panel-content"></div>
+  `;
+  document.body.appendChild(panel);
+
+  const closeBtn = panel.querySelector('.close-btn');
+  const panelContent = panel.querySelector('.panel-content');
+
+  closeBtn.addEventListener('click', () => {
+    panel.classList.add('hidden');
+  });
+
+  // Expose handler globally for parcel layer
+  window.handleParcelClick = async (pid, properties) => {
+    panel.classList.remove('hidden');
+    panelContent.innerHTML = '<div class="loading">Loading parcel details...</div>';
+
+    const details = await fetchParcelDetails(pid);
+    const allData = { ...properties, ...details };
+
+    let html = '<div class="details-grid">';
+    for (const [key, value] of Object.entries(allData)) {
+      if (value !== null && value !== undefined && value !== '') {
+        html += `
+          <div class="detail-row">
+            <span class="detail-label">${key}:</span>
+            <span class="detail-value">${value}</span>
+          </div>
+        `;
+      }
+    }
+    html += '</div>';
+
+    panelContent.innerHTML = html;
+  };
 }
 
 // Initialize when DOM is ready
