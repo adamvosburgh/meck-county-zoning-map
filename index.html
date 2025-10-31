@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mecklenburg County Zoning Map</title>
+  <link rel="stylesheet" href="/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/maplibre-gl@latest/dist/maplibre-gl.css" rel="stylesheet" />
+  <script type="module" crossorigin src="/assets/index-MIOHRa85.js"></script>
+</head>
+<body>
+  <div id="map"></div>
+
+  <!-- Search Container -->
+  <div class="search-container">
+    <input
+      type="text"
+      id="search-input"
+      placeholder="Search address (e.g., '123 Main St, Charlotte')"
+      class="search-input"
+    >
+    <button id="search-btn" class="search-btn">Search</button>
+  </div>
+
+  <!-- Layer Toggle Container -->
+  <div class="layer-toggle-container">
+    <label class="toggle-item">
+      <input type="checkbox" id="toggle-basemap" checked>
+      <span>OSM Tiles</span>
+    </label>
+    <label class="toggle-item">
+      <input type="checkbox" id="toggle-parcels" checked>
+      <span>Parcels</span>
+    </label>
+    <label class="toggle-item">
+      <input type="checkbox" id="toggle-streets" checked>
+      <span>Streets</span>
+    </label>
+    <label class="toggle-item">
+      <input type="checkbox" id="toggle-buildings" checked>
+      <span>Buildings</span>
+    </label>
+  </div>
+
+  <!-- Attribution Footer -->
+  <footer class="attribution">
+    <p>
+      Data © 2025 City of Charlotte & Mecklenburg County GIS.
+      Basemap © OpenStreetMap contributors.
+      Building footprints & streets via Overpass API.
+    </p>
+  </footer>
+
+</body>
+</html>
