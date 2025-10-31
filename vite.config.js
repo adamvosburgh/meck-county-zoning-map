@@ -1,7 +1,9 @@
 import { defineConfig } from 'vite';
 
-export default defineConfig({
-  base: '/meck-county-zoning-map/',
+export default defineConfig(({ command }) => ({
+  // Use subdirectory base only for production builds (GitHub Pages)
+  // Use root path for local development
+  base: command === 'build' ? '/meck-county-zoning-map/' : '/',
   root: '.',
   publicDir: 'public',
   build: {
@@ -13,4 +15,4 @@ export default defineConfig({
     port: 3000,
     open: true
   }
-});
+}));

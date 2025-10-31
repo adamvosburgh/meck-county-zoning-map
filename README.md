@@ -3,7 +3,7 @@
 Interactive MapLibre GL app that highlights Mecklenburg County parcels, zoning context, buildings, and streets using open data services.
 
 ## Features
-- Parcel outlines appear from zoom level 14 using the Charlotte CLTEx parcel service (GeoJSON response).
+- Parcel outlines appear from zoom level 16 using the Charlotte CLTEx parcel service (GeoJSON response).
 - Hover tooltips expose parcel IDs plus any returned address/owner attributes.
 - Building footprints and street context load on-demand from Overpass.
 - Address search calls the Charlotte Master Address geocoder with Nominatim fallback.

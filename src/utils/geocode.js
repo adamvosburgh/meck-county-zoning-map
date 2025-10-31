@@ -4,7 +4,7 @@
  * Fallback: Nominatim (OpenStreetMap)
  */
 
-const CHARLOTTE_GEOCODER = 'https://maps.charlottenc.gov/arcgis/rest/services/LOC/MasterAddress/GeocodeServer/findAddressCandidates';
+const CHARLOTTE_GEOCODER = 'https://gis.charlottenc.gov/arcgis/rest/services/LOC/MasterAddress/GeocodeServer/findAddressCandidates';
 const NOMINATIM_ENDPOINT = 'https://nominatim.openstreetmap.org/search';
 
 /**
@@ -37,6 +37,7 @@ export async function geocodeAddress(address) {
 async function geocodeCharlotte(address) {
   const params = new URLSearchParams({
     SingleLine: address,
+    outSR: '4326', // Request WGS84 lat/lng coordinates
     f: 'json'
   });
 

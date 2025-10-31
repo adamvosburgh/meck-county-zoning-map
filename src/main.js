@@ -2,25 +2,37 @@
  * Main application entry point
  */
 
+import maplibregl from 'maplibre-gl';
 import { initializeMap, setupLayers, panToLocation } from './map.js';
 import { geocodeAddress } from './utils/geocode.js';
+
+// Global marker for search results
+let searchMarker = null;
 
 /**
  * Initialize the application
  */
 async function init() {
+  console.log('=== INIT CALLED ===');
   const map = initializeMap();
+  console.log('=== MAP INITIALIZED ===', map);
 
   const searchInput = document.getElementById('search-input');
   const searchBtn = document.getElementById('search-btn');
 
   // Setup parcel details panel FIRST so handler is available
+  console.log('=== SETTING UP PARCEL PANEL ===');
   await setupParcelDetailsPanel();
+  console.log('=== PARCEL PANEL SETUP COMPLETE ===');
 
   // Then setup layers which will use the handler
+  console.log('=== SETTING UP LAYERS ===');
   setupLayers(map);
+  console.log('=== SETTING UP SEARCH ===');
   setupSearch(map, searchInput, searchBtn);
+  console.log('=== SETTING UP TOGGLES ===');
   setupLayerToggles(map);
+  console.log('=== INIT COMPLETE ===');
 }
 
 /**
@@ -35,8 +47,10 @@ function setupLayerToggles(map) {
 
   // Wait for map to be ready before setting up toggles
   const setupToggles = () => {
+    console.log('=== SETTING UP TOGGLE LISTENERS ===');
     toggleBasemap.addEventListener('change', (e) => {
       const visibility = e.target.checked ? 'visible' : 'none';
+      console.log('Toggling basemap:', visibility);
       if (map.getLayer('osm-tiles')) {
         map.setLayoutProperty('osm-tiles', 'visibility', visibility);
       }
@@ -44,6 +58,7 @@ function setupLayerToggles(map) {
 
     toggleParcels.addEventListener('change', (e) => {
       const visibility = e.target.checked ? 'visible' : 'none';
+      console.log('Toggling parcels:', visibility);
       if (map.getLayer('parcels')) {
         map.setLayoutProperty('parcels', 'visibility', visibility);
       }
@@ -54,6 +69,7 @@ function setupLayerToggles(map) {
 
     toggleStreets.addEventListener('change', (e) => {
       const visibility = e.target.checked ? 'visible' : 'none';
+      console.log('Toggling streets:', visibility);
       if (map.getLayer('streets')) {
         map.setLayoutProperty('streets', 'visibility', visibility);
       }
@@ -61,6 +77,7 @@ function setupLayerToggles(map) {
 
     toggleBuildings.addEventListener('change', (e) => {
       const visibility = e.target.checked ? 'visible' : 'none';
+      console.log('Toggling buildings:', visibility);
       if (map.getLayer('buildings')) {
         map.setLayoutProperty('buildings', 'visibility', visibility);
       }
@@ -70,11 +87,11 @@ function setupLayerToggles(map) {
     });
   };
 
-  if (map.isStyleLoaded()) {
+  // Use the same load event as layers setup
+  map.on('load', () => {
+    console.log('=== MAP LOADED, SETTING UP TOGGLES ===');
     setupToggles();
-  } else {
-    map.once('style.load', setupToggles);
-  }
+  });
 }
 
 /**
@@ -92,7 +109,23 @@ function setupSearch(map, searchInput, searchBtn) {
       const result = await geocodeAddress(address);
 
       if (result) {
-        panToLocation(map, result.latitude, result.longitude, 16);
+        // Remove existing marker if any
+        if (searchMarker) {
+          searchMarker.remove();
+        }
+
+        // Create new marker at the geocoded location
+        searchMarker = new maplibregl.Marker({ color: '#ff0000' })
+          .setLngLat([result.longitude, result.latitude])
+          .setPopup(
+            new maplibregl.Popup({ offset: 25 })
+              .setHTML(`<strong>${result.label}</strong>`)
+          )
+          .addTo(map);
+
+        // Pan and zoom to location
+        panToLocation(map, result.latitude, result.longitude, 18);
+
         console.log(`Geocoded to: ${result.label} (${result.source})`);
       } else {
         alert('Address not found. Please try another search.');
