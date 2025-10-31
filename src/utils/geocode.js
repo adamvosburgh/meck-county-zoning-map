@@ -1,28 +1,28 @@
 /**
  * Address geocoding utilities
- * Primary: Charlotte MasterAddress GeocodeServer
- * Fallback: Nominatim (OpenStreetMap)
+ * Primary: Nominatim (OpenStreetMap) with Mecklenburg County restriction
+ * Fallback: Charlotte MasterAddress GeocodeServer
  */
 
-const CHARLOTTE_GEOCODER = 'https://gis.charlottenc.gov/arcgis/rest/services/LOC/MasterAddress/GeocodeServer/findAddressCandidates';
 const NOMINATIM_ENDPOINT = 'https://nominatim.openstreetmap.org/search';
+const CHARLOTTE_GEOCODER = 'https://gis.charlottenc.gov/arcgis/rest/services/LOC/MasterAddress/GeocodeServer/findAddressCandidates';
 
 /**
- * Geocode an address using Charlotte's MasterAddress service with Nominatim fallback
+ * Geocode an address using Nominatim with Charlotte fallback
  * @param {string} address - Address string to geocode
  * @returns {Promise<Object>} { latitude, longitude, label } or null if not found
  */
 export async function geocodeAddress(address) {
   try {
-    // Try Charlotte MasterAddress first
-    const charlotteResult = await geocodeCharlotte(address);
-    if (charlotteResult) {
-      return charlotteResult;
+    // Try Nominatim first (better fuzzy matching)
+    const nominatimResult = await geocodeNominatim(address);
+    if (nominatimResult) {
+      return nominatimResult;
     }
 
-    // Fallback to Nominatim
-    console.log('Charlotte geocoder found no results, trying Nominatim...');
-    return await geocodeNominatim(address);
+    // Fallback to Charlotte MasterAddress
+    console.log('Nominatim found no results, trying Charlotte geocoder...');
+    return await geocodeCharlotte(address);
   } catch (error) {
     console.error('Geocoding error:', error);
     return null;
@@ -62,21 +62,68 @@ async function geocodeCharlotte(address) {
 }
 
 /**
- * Geocode using Nominatim (OpenStreetMap)
+ * Parse address string into components for structured Nominatim query
+ * @param {string} address
+ * @returns {Object} Address components
+ */
+function parseAddress(address) {
+  const parts = {};
+
+  // Extract house number and street
+  const streetMatch = address.match(/^(\d+)\s+(.+?)(?:,|$)/i);
+  if (streetMatch) {
+    parts.street = `${streetMatch[1]} ${streetMatch[2].trim()}`;
+  } else {
+    parts.street = address.split(',')[0].trim();
+  }
+
+  // Extract city (default to Charlotte if not specified)
+  if (address.match(/charlotte/i)) {
+    parts.city = 'Charlotte';
+  } else {
+    parts.city = 'Charlotte'; // Default to Charlotte
+  }
+
+  // Extract state and zip
+  if (address.match(/\bNC\b/i)) {
+    parts.state = 'North Carolina';
+  }
+
+  const zipMatch = address.match(/\b(28\d{3})\b/);
+  if (zipMatch) {
+    parts.postalcode = zipMatch[1];
+  }
+
+  return parts;
+}
+
+/**
+ * Geocode using Nominatim (OpenStreetMap) with structured query
  * @param {string} address
  * @returns {Promise<Object|null>}
  */
 async function geocodeNominatim(address) {
+  const addressParts = parseAddress(address);
+
   const params = new URLSearchParams({
-    q: address,
     format: 'json',
     limit: 1,
-    viewbox: '-80.9,-35.3,-80.7,-35.1', // Mecklenburg County rough bounds
-    bounded: 1
+    // Restrict to Mecklenburg County bounds
+    viewbox: '-81.0,35.0,-80.5,35.5',
+    bounded: '1',
+    // Always add county and state for context
+    county: 'Mecklenburg County',
+    state: 'North Carolina',
+    country: 'United States',
+    ...addressParts
   });
 
   try {
-    const response = await fetch(`${NOMINATIM_ENDPOINT}?${params}`);
+    const response = await fetch(`${NOMINATIM_ENDPOINT}?${params}`, {
+      headers: {
+        'User-Agent': 'MecklenburgZoningMap/1.0'
+      }
+    });
     const data = await response.json();
 
     if (data && data.length > 0) {
