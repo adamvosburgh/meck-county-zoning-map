@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+  base: '/meck-county-zoning-map/',
   root: '.',
   publicDir: 'public',
   build: {
