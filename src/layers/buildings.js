@@ -41,10 +41,8 @@ export function addBuildingsLayer(map) {
  */
 export async function updateBuildings(map) {
   const zoom = map.getZoom();
-  console.log('=== UPDATE BUILDINGS CALLED, zoom:', zoom);
   if (zoom < 16) {
     // Clear buildings if zoomed out
-    console.log('=== BUILDINGS: Zoom too low, clearing');
     map.getSource('buildings').setData({ type: 'FeatureCollection', features: [] });
     return;
   }

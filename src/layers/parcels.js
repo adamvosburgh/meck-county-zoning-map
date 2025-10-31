@@ -98,9 +98,7 @@ export function addParcelLayer(map, onParcelClick) {
  */
 export async function updateParcels(map) {
   const zoom = map.getZoom();
-  console.log('=== UPDATE PARCELS CALLED, zoom:', zoom, 'min:', MIN_PARCEL_ZOOM);
   if (zoom < MIN_PARCEL_ZOOM) {
-    console.log('=== PARCELS: Zoom too low, clearing');
     map.getSource('parcels').setData({ type: 'FeatureCollection', features: [] });
     return;
   }
@@ -126,7 +124,6 @@ export async function updateParcels(map) {
     });
 
     const url = `https://gis.charlottenc.gov/arcgis/rest/services/CLT_Ex/CLTEx_PopUps/MapServer/3/query?${params}`;
-    console.log('=== FETCHING PARCELS:', url);
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -134,14 +131,12 @@ export async function updateParcels(map) {
     }
 
     const data = await response.json();
-    console.log('=== PARCEL DATA RECEIVED, features:', data.features?.length);
     if (data.error) {
       console.error('Parcel API error:', data.error);
       return;
     }
 
     const geojson = normalizeGeoJSON(data);
-    console.log('=== NORMALIZED GEOJSON, features:', geojson.features?.length);
     const parcelSource = map.getSource('parcels');
 
     if (!parcelSource) {
@@ -149,9 +144,7 @@ export async function updateParcels(map) {
       return;
     }
 
-    console.log('=== SETTING PARCEL DATA');
     parcelSource.setData(geojson);
-    console.log('=== PARCEL DATA SET SUCCESSFULLY');
   } catch (error) {
     console.error('Error fetching parcels:', error);
   }

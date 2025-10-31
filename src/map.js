@@ -63,43 +63,25 @@ export function setupLayers(map) {
 
   const onStyleLoad = () => {
     try {
-      console.log('=== STYLE LOADED, ADDING LAYERS ===');
       addParcelLayer(map, window.handleParcelClick);
-      console.log('=== PARCEL LAYER ADDED ===');
       addBuildingsLayer(map);
-      console.log('=== BUILDINGS LAYER ADDED ===');
 
       // Only attach event handlers AFTER sources are added
       map.on('move', debouncedUpdateLayers);
       map.on('moveend', debouncedUpdateLayers);
-      console.log('=== EVENT HANDLERS ATTACHED ===');
     } catch (error) {
       console.error('Error adding layers:', error);
     }
   };
 
-  console.log('=== CHECKING STYLE LOADED ===', map.isStyleLoaded());
-
-  // Listen for errors
-  map.on('error', (e) => {
-    console.error('=== MAP ERROR ===', e);
-  });
-
   if (map.isStyleLoaded()) {
-    console.log('=== STYLE ALREADY LOADED, CALLING onStyleLoad ===');
     onStyleLoad();
   } else {
-    console.log('=== WAITING FOR STYLE LOAD EVENT ===');
-    map.once('style.load', () => {
-      console.log('=== STYLE.LOAD EVENT FIRED ===');
-      onStyleLoad();
-    });
+    map.once('style.load', onStyleLoad);
 
     // Fallback: check again after map is loaded
     map.on('load', () => {
-      console.log('=== MAP LOAD EVENT FIRED ===');
       if (!map.getSource('parcels')) {
-        console.log('=== PARCELS SOURCE NOT FOUND, CALLING onStyleLoad ===');
         onStyleLoad();
       }
     });

@@ -13,26 +13,18 @@ let searchMarker = null;
  * Initialize the application
  */
 async function init() {
-  console.log('=== INIT CALLED ===');
   const map = initializeMap();
-  console.log('=== MAP INITIALIZED ===', map);
 
   const searchInput = document.getElementById('search-input');
   const searchBtn = document.getElementById('search-btn');
 
   // Setup parcel details panel FIRST so handler is available
-  console.log('=== SETTING UP PARCEL PANEL ===');
   await setupParcelDetailsPanel();
-  console.log('=== PARCEL PANEL SETUP COMPLETE ===');
 
   // Then setup layers which will use the handler
-  console.log('=== SETTING UP LAYERS ===');
   setupLayers(map);
-  console.log('=== SETTING UP SEARCH ===');
   setupSearch(map, searchInput, searchBtn);
-  console.log('=== SETTING UP TOGGLES ===');
   setupLayerToggles(map);
-  console.log('=== INIT COMPLETE ===');
 }
 
 /**
@@ -47,10 +39,8 @@ function setupLayerToggles(map) {
 
   // Wait for map to be ready before setting up toggles
   const setupToggles = () => {
-    console.log('=== SETTING UP TOGGLE LISTENERS ===');
     toggleBasemap.addEventListener('change', (e) => {
       const visibility = e.target.checked ? 'visible' : 'none';
-      console.log('Toggling basemap:', visibility);
       if (map.getLayer('osm-tiles')) {
         map.setLayoutProperty('osm-tiles', 'visibility', visibility);
       }
@@ -58,7 +48,6 @@ function setupLayerToggles(map) {
 
     toggleParcels.addEventListener('change', (e) => {
       const visibility = e.target.checked ? 'visible' : 'none';
-      console.log('Toggling parcels:', visibility);
       if (map.getLayer('parcels')) {
         map.setLayoutProperty('parcels', 'visibility', visibility);
       }
@@ -69,7 +58,6 @@ function setupLayerToggles(map) {
 
     toggleStreets.addEventListener('change', (e) => {
       const visibility = e.target.checked ? 'visible' : 'none';
-      console.log('Toggling streets:', visibility);
       if (map.getLayer('streets')) {
         map.setLayoutProperty('streets', 'visibility', visibility);
       }
@@ -77,7 +65,6 @@ function setupLayerToggles(map) {
 
     toggleBuildings.addEventListener('change', (e) => {
       const visibility = e.target.checked ? 'visible' : 'none';
-      console.log('Toggling buildings:', visibility);
       if (map.getLayer('buildings')) {
         map.setLayoutProperty('buildings', 'visibility', visibility);
       }
@@ -88,10 +75,7 @@ function setupLayerToggles(map) {
   };
 
   // Use the same load event as layers setup
-  map.on('load', () => {
-    console.log('=== MAP LOADED, SETTING UP TOGGLES ===');
-    setupToggles();
-  });
+  map.on('load', setupToggles);
 }
 
 /**
