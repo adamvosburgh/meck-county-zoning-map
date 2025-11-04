@@ -22,21 +22,24 @@ export function initializeMap() {
     style: {
       version: 8,
       sources: {
-        'stadia-smooth': {
+        'carto-light': {
           type: 'raster',
           tiles: [
-            'https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}.png'
+            'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+            'https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+            'https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+            'https://d.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png'
           ],
           tileSize: 256,
           maxzoom: 19,
-          attribution: '© Stadia Maps © OpenMapTiles © OpenStreetMap contributors'
+          attribution: '© CARTO © OpenStreetMap contributors'
         }
       },
       layers: [
         {
           id: 'basemap-tiles',
           type: 'raster',
-          source: 'stadia-smooth'
+          source: 'carto-light'
         }
       ]
     },
