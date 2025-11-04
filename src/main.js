@@ -34,15 +34,14 @@ async function init() {
 function setupLayerToggles(map) {
   const toggleBasemap = document.getElementById('toggle-basemap');
   const toggleParcels = document.getElementById('toggle-parcels');
-  const toggleStreets = document.getElementById('toggle-streets');
-  const toggleBuildings = document.getElementById('toggle-buildings');
+  // Buildings toggle removed - layer commented out in map.js
 
   // Wait for map to be ready before setting up toggles
   const setupToggles = () => {
     toggleBasemap.addEventListener('change', (e) => {
       const visibility = e.target.checked ? 'visible' : 'none';
-      if (map.getLayer('osm-tiles')) {
-        map.setLayoutProperty('osm-tiles', 'visibility', visibility);
+      if (map.getLayer('basemap-tiles')) {
+        map.setLayoutProperty('basemap-tiles', 'visibility', visibility);
       }
     });
 
@@ -56,13 +55,10 @@ function setupLayerToggles(map) {
       }
     });
 
-    toggleStreets.addEventListener('change', (e) => {
-      const visibility = e.target.checked ? 'visible' : 'none';
-      if (map.getLayer('streets')) {
-        map.setLayoutProperty('streets', 'visibility', visibility);
-      }
-    });
-
+    // Buildings toggle functionality - commented out with layer
+    // Uncomment if buildings layer is re-enabled in map.js
+    /*
+    const toggleBuildings = document.getElementById('toggle-buildings');
     toggleBuildings.addEventListener('change', (e) => {
       const visibility = e.target.checked ? 'visible' : 'none';
       if (map.getLayer('buildings')) {
@@ -72,6 +68,7 @@ function setupLayerToggles(map) {
         map.setLayoutProperty('buildings-outline', 'visibility', visibility);
       }
     });
+    */
   };
 
   // Use the same load event as layers setup

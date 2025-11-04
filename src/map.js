@@ -22,23 +22,21 @@ export function initializeMap() {
     style: {
       version: 8,
       sources: {
-        'osm-raster': {
+        'stadia-smooth': {
           type: 'raster',
           tiles: [
-            'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            'https://b.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png'
+            'https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}.png'
           ],
           tileSize: 256,
           maxzoom: 19,
-          attribution: '© OpenStreetMap contributors'
+          attribution: '© Stadia Maps © OpenMapTiles © OpenStreetMap contributors'
         }
       },
       layers: [
         {
-          id: 'osm-tiles',
+          id: 'basemap-tiles',
           type: 'raster',
-          source: 'osm-raster'
+          source: 'stadia-smooth'
         }
       ]
     },
@@ -58,13 +56,16 @@ export function initializeMap() {
 export function setupLayers(map) {
   const debouncedUpdateLayers = debounce(() => {
     updateParcels(map);
-    updateBuildings(map);
+    // Buildings layer commented out for performance - uncomment to enable
+    // updateBuildings(map);
   }, 500);
 
   const onStyleLoad = () => {
     try {
       addParcelLayer(map, window.handleParcelClick);
-      addBuildingsLayer(map);
+
+      // Buildings layer commented out for performance - uncomment to enable
+      // addBuildingsLayer(map);
 
       // Only attach event handlers AFTER sources are added
       map.on('move', debouncedUpdateLayers);
